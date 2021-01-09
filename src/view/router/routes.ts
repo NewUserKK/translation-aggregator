@@ -6,7 +6,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 import AuthScreen from "@/view/views/auth/LoginPage.vue";
 import AuthenticatedPage from "@/view/views/auth/AuthenticatedPage.vue";
 import ComponentsTestPage from "@/view/views/dev/ComponentsTestPage.vue";
-import MainPage from "@/view/views/MainPage.vue";
+import MainPage from "@/view/views/main/MainPage.vue";
 import NotFoundPage from "@/view/views/NotFoundPage.vue";
 
 Vue.use(VueRouter);
@@ -15,7 +15,7 @@ let routes: Array<RouteConfig>;
 routes = [
   {
     path: "/",
-    redirect: "/login"
+    redirect: "/main"
   },
 
   {

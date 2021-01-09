@@ -31,7 +31,7 @@
     loginError: Error | null = null;
 
     login() {
-      this.$router.replace("main")
+      this.$router.replace("main");
     }
   }
 </script>

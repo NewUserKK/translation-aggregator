@@ -9,9 +9,7 @@
   import { Component, Vue } from "vue-property-decorator";
 
   class AuthenticationError {
-    constructor(
-      public readonly description: string = "",
-    ) {}
+    constructor(public readonly description: string = "") {}
   }
 
   @Component
@@ -22,7 +20,7 @@
       const query = this.$route.query;
       if (query.error) {
         this.error = new AuthenticationError(
-          query.error_description as string ?? "",
+          (query.error_description as string) ?? ""
         );
       }
     }

@@ -7,7 +7,7 @@
 <style>
   * {
     box-sizing: border-box;
-    font-family: 'Work Sans', sans-serif;
+    font-family: "Work Sans", sans-serif;
   }
 
   *:focus {
