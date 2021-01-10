@@ -1,4 +1,4 @@
-import { Either } from "@/data/common/Either";
+import { Either } from "@/domain/common/Either";
 
 type Result<T> = Either<Error, T>;
 

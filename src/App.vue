@@ -1,5 +1,5 @@
 <template>
-  <div ref="app" id="app">
+  <div id="app">
     <router-view />
   </div>
 </template>
@@ -29,22 +29,24 @@
   p {
     margin: 0;
     padding: 0;
+
+    font-size: 18px;
   }
 
   h1 {
     margin: 0;
     padding: 0;
 
-    font-weight: bold;
-    font-size: 18px;
+    font-weight: normal;
+    font-size: 32px;
   }
 
   h2 {
     margin: 0;
     padding: 0;
 
-    font-weight: bold;
-    font-size: 16px;
+    font-weight: normal;
+    font-size: 28px;
   }
 
   ul {

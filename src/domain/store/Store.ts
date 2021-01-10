@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex, { ActionContext } from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import UserStore from "@/domain/store/UserStore";
+import UserStore from "@/domain/store/user/UserStore";
 
 Vue.use(Vuex);
 

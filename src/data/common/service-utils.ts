@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
-import Result from "@/data/common/Result";
-import { leftOf, rightOf } from "@/data/common/Either";
+import Result from "@/domain/common/Result";
+import { leftOf, rightOf } from "@/domain/common/Either";
 
 export async function handle<ResultType, ResponseType = object | any[]>(
   call: Promise<AxiosResponse<ResponseType>>,
