@@ -29,7 +29,7 @@
     }
 
     navigateToLogin() {
-      this.$router.replace({ path: "/login" });
+      this.$emit("signInPress");
     }
   }
 </script>

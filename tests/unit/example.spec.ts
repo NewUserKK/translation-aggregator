@@ -1,12 +1,12 @@
 import { expect } from "chai";
-import { mount, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import MainPage from "@/view/views/main/MainPage.vue";
 import * as TranslationService from "@/data/translation/TranslationService";
 import Result from "@/domain/common/Result";
 import { rightOf } from "@/domain/common/Either";
 import UrbanTranslationResult from "@/domain/model/translation/UrbanTranslationResult";
 
-const sinon = require("sinon");
+import sinon from "sinon";
 
 afterEach(() => {
   sinon.restore();

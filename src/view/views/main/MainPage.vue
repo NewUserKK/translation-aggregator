@@ -2,7 +2,10 @@
   <div class="container">
     <header class="header">
       <h1 class="header__title no-text-selection">Traggregator</h1>
-      <HeaderProfileBadge class="header__badge" />
+      <HeaderProfileBadge
+        class="header__badge"
+        @signInPress="$router.push({ path: '/login' })"
+      />
     </header>
 
     <main class="main">
@@ -12,7 +15,7 @@
           <textarea
             id="main-translations__input"
             class="main-translations__input"
-            v-model="inputToTranslate"
+            v-model="inputWord"
             placeholder="Type text to translate"
             @input="debouncedTranslate"
           />
@@ -60,38 +63,48 @@
   import { Component, Vue } from "vue-property-decorator";
   import HeaderProfileBadge from "@/view/views/main/HeaderProfileBadge.vue";
   import UrbanTranslationResult from "@/domain/model/translation/UrbanTranslationResult";
-  import * as TranslationService from "@/data/translation/TranslationService";
   import { debounce } from "ts-debounce";
   import Card from "@/view/components/Card.vue";
+  import {
+    TranslationAction,
+    TranslationMutation,
+    TranslationState
+  } from "@/domain/store/translation/TranslationStore";
 
   @Component({
     components: { HeaderProfileBadge, Card }
   })
   export default class MainPage extends Vue {
-    inputToTranslate = "";
-    regularTranslationResult = "";
-    urbanTranslationResults: UrbanTranslationResult[] = [];
+    translationState: TranslationState = this.$store.state.TranslationStore;
 
-    debouncedTranslate = debounce(this.translateText, 300);
-    async translateText(event: InputEvent) {
-      const query: string = (event.target as any).value;
+    get inputWord(): string {
+      return this.translationState.inputWord;
+    }
 
-      const [yandexResult, urbanResult] = await Promise.all([
-        TranslationService.translateYandex(query),
-        TranslationService.translateUrban(query)
-      ]);
+    set inputWord(value: string) {
+      this.$store.commit(TranslationMutation.SET_INPUT_WORD, value);
+    }
 
-      this.regularTranslationResult = yandexResult
+    get regularTranslationResult(): string {
+      return this.translationState.regularTranslationResult
         .matcher<string>()
         .selfOnRight()
         .onLeft(() => "")
         .match();
+    }
 
-      this.urbanTranslationResults = urbanResult
+    get urbanTranslationResults(): UrbanTranslationResult[] {
+      return this.translationState.urbanTranslationResults
         .matcher<UrbanTranslationResult[]>()
         .selfOnRight()
         .onLeft(() => [])
         .match();
+    }
+
+    debouncedTranslate = debounce(this.translateText, 300);
+    async translateText(event: InputEvent) {
+      const query: string = (event.target as any).value;
+      await this.$store.dispatch(TranslationAction.TRANSLATE_WORD, query);
     }
   }
 </script>
