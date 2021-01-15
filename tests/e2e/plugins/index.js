@@ -7,26 +7,19 @@
 // https://docs.cypress.io/api/plugins/preprocessors-api.html#Examples
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+const browserify = require("@cypress/browserify-preprocessor");
 // const webpack = require("@cypress/webpack-preprocessor");
 
 module.exports = (on, config) => {
+  const browserifyOptions = browserify.defaultOptions;
+  browserifyOptions.browserifyOptions.transform[1][1].babelrc = true;
+  browserifyOptions.typescript = require.resolve("typescript");
+  on("file:preprocessor", browserify(browserifyOptions));
+
   // on(
   //   "file:preprocessor",
   //   webpack({
-  //     webpackOptions: {
-  //       resolve: {
-  //         extensions: [".ts", ".tsx", ".js"]
-  //       },
-  //       module: {
-  //         rules: [
-  //           {
-  //             test: /\.tsx?$/,
-  //             loader: "ts-loader",
-  //             options: { transpileOnly: true }
-  //           }
-  //         ]
-  //       }
-  //     },
+  //     webpackOptions: require("../../../webpack.config.js"),
   //     watchOptions: {}
   //   })
   // );

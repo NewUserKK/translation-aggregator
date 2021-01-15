@@ -1,7 +1,6 @@
 // https://docs.cypress.io/api/introduction/api.html
 
 import * as TranslationService from "@/data/translation/TranslationService";
-import Result from "@/domain/common/Result";
 import { rightOf } from "@/domain/common/Either";
 import UrbanTranslationResult from "@/domain/model/translation/UrbanTranslationResult";
 
