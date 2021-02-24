@@ -2,11 +2,11 @@ import { expect } from "chai";
 import { shallowMount } from "@vue/test-utils";
 import MainPage from "@/view/views/main/MainPage.vue";
 import * as TranslationService from "@/data/translation/TranslationService";
-import Result from "@/domain/common/Result";
 import { rightOf } from "@/domain/common/Either";
 import UrbanTranslationResult from "@/domain/model/translation/UrbanTranslationResult";
 
 import sinon from "sinon";
+import RegularTranslationResult from "@/domain/model/translation/RegularTranslationResult";
 
 afterEach(() => {
   sinon.restore();
@@ -16,7 +16,7 @@ describe("MainPage.vue", () => {
   it("shows translation on input", async () => {
     const word = "word";
 
-    const yandexTranslationResult = word;
+    const regularTranslationResult = [new RegularTranslationResult(word)];
     const urbanTranslationResults = [
       new UrbanTranslationResult(word, "def1", "", 0),
       new UrbanTranslationResult(word, "def2", "", 1),
@@ -24,8 +24,8 @@ describe("MainPage.vue", () => {
     ];
 
     const yandexStub = sinon
-      .stub(TranslationService, "translateYandex")
-      .returns(Promise.resolve<Result<string>>(rightOf(word)));
+      .stub(TranslationService, "translateRegular")
+      .returns(Promise.resolve(rightOf(regularTranslationResult)));
 
     const urbanStub = sinon
       .stub(TranslationService, "translateUrban")
@@ -43,7 +43,7 @@ describe("MainPage.vue", () => {
       );
 
       expect(wrapper.get(".main-translations__wrapper p").text()).to.eq(
-        yandexTranslationResult
+        regularTranslationResult[0].text
       );
     }, 500);
   });

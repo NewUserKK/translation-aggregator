@@ -1,37 +1,69 @@
 // https://docs.cypress.io/api/introduction/api.html
 
-import * as TranslationService from "@/data/translation/TranslationService";
-import { rightOf } from "@/domain/common/Either";
-import UrbanTranslationResult from "@/domain/model/translation/UrbanTranslationResult";
+// import * as TranslationService from "../../../src/data/translation/TranslationService";
+// import { rightOf } from "@/domain/common/Either";
+// import UrbanTranslationResult from "@/domain/model/translation/UrbanTranslationResult";
+// import RegularTranslationResult from "@/domain/model/translation/RegularTranslationResult";
 
 describe("MainPage", () => {
   it("root redirects to main page", () => {
     cy.visit("/");
-    cy.location("pathname").should("eq", "/main");
+    cy.hash().should("eq", "#/main");
   });
 
-  it("root redirects to main page", () => {
+  it("translation request works correctly", () => {
     const word = "word";
 
-    const yandexTranslationResult = word;
-    const urbanTranslationResults = [
-      new UrbanTranslationResult(word, "def1", "", 0),
-      new UrbanTranslationResult(word, "def2", "", 1),
-      new UrbanTranslationResult(word, "def3", "", 2)
-    ];
+    // const regularTranslationResults = [new RegularTranslationResult(word)];
+    // const urbanTranslationResults = [
+    //   new UrbanTranslationResult(word, "def1", "", 0),
+    //   new UrbanTranslationResult(word, "def2", "", 1),
+    //   new UrbanTranslationResult(word, "def3", "", 2)
+    // ];
 
-    const yandexStub = cy
-      .stub(TranslationService, "translateYandex")
-      .returns(Promise.resolve(rightOf(yandexTranslationResult)));
+    // cy.route(`${BASE_URL}/translate/regular`, regularTranslationResults)
+    // cy.route(`${BASE_URL}/translate/urban`, urbanTranslationResults)
 
-    const urbanStub = cy
-      .stub(TranslationService, "translateUrban")
-      .returns(Promise.resolve(rightOf(urbanTranslationResults)));
+    // cy.stub(TranslationService, "translateRegular").returns(
+    //   Promise.resolve(rightOf(regularTranslationResults))
+    // );
+    //
+    // cy.stub(TranslationService, "translateUrban").returns(
+    //   Promise.resolve(rightOf(urbanTranslationResults))
+    // );
 
-    cy.visit("/main");
+    cy.visit("#main");
 
     cy.get("#main-translations__input").type(word);
+    cy.wait(1000);
+    cy.get(".main-translations-result__text").contains(/[a-zA-Zа-яА-Я]+/);
+  });
 
-    cy.get(".translations__wrapper p").should("have.value", word);
+  it("empty input implies empty result", () => {
+    cy.visit("#main");
+
+    cy.get("#main-translations__input").clear();
+    cy.wait(1000);
+    cy.get(".main-translations-result__text").should("have.value", "");
+  });
+
+  it("result should be cleared after clearing input", () => {
+    cy.visit("#main");
+
+    cy.get("#main-translations__input").type("word");
+    cy.wait(1000);
+
+    cy.get("#main-translations__input").clear();
+    cy.wait(1000);
+
+    cy.get(".main-translations-result__text").should("have.value", "");
+  });
+
+  it("title of urban results should point to UrbanDictionary website", () => {
+    cy.visit("#main");
+
+    cy.get(".urban-translations__header a")
+      .should("have.attr", "href")
+      .and("eq", "https://urbandictionary.com/");
   });
 });

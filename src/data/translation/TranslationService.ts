@@ -1,19 +1,17 @@
 import Result from "@/domain/common/Result";
 import { axiosInstance } from "@/axios";
-import { handle, handleSuccess } from "@/data/common/service-utils";
+import { handleSuccess } from "@/data/common/service-utils";
 import UrbanTranslationResult from "@/domain/model/translation/UrbanTranslationResult";
 import { rightOf } from "@/domain/common/Either";
+import RegularTranslationResult from "@/domain/model/translation/RegularTranslationResult";
 
-export async function translateYandex(query: string): Promise<Result<string>> {
-  const baseUrl = "https://translate.yandex.net/api/v1.5/tr.json/translate";
-
+export async function translateRegular(
+  query: string
+): Promise<Result<RegularTranslationResult[]>> {
   return handleSuccess(
-    axiosInstance.get(baseUrl, {
+    axiosInstance.get("translate/regular", {
       params: {
-        key:
-          "TODO",
-        text: query,
-        lang: "en-ru"
+        word: query
       }
     })
   );
@@ -26,13 +24,11 @@ export async function translateUrban(
     return rightOf([]);
   }
 
-  const url = `https://api.urbandictionary.com/v0/define`;
-
-  const request = axiosInstance.get(url, {
+  const request = axiosInstance.get("translate/urban", {
     params: {
-      term: query
+      word: query
     }
   });
 
-  return handle(request, response => rightOf(response["list"]));
+  return handleSuccess(request);
 }

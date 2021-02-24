@@ -3,15 +3,18 @@ import { StoreContext } from "@/domain/store/Store";
 import { rightOf } from "@/domain/common/Either";
 import Result from "@/domain/common/Result";
 import * as TranslationService from "@/data/translation/TranslationService";
+import RegularTranslationResult from "@/domain/model/translation/RegularTranslationResult";
 
+// prettier-ignore
 export class TranslationState {
   constructor(
     public inputWord: string = "",
-    public regularTranslationResult: Result<string> = rightOf(""),
-    public urbanTranslationResults: Result<UrbanTranslationResult[]> = rightOf(
-      []
-    )
-  ) {}
+    public regularTranslationResults: Result<RegularTranslationResult[]> =
+      rightOf([]),
+    public urbanTranslationResults: Result<UrbanTranslationResult[]> =
+      rightOf([])
+  ) {
+  }
 }
 
 export enum TranslationMutation {
@@ -32,8 +35,11 @@ const TranslationStore = {
       state.inputWord = word;
     },
 
-    setRegularResult(state: TranslationState, result: Result<string>) {
-      state.regularTranslationResult = result;
+    setRegularResult(
+      state: TranslationState,
+      result: Result<RegularTranslationResult[]>
+    ) {
+      state.regularTranslationResults = result;
     },
 
     setUrbanResults(
@@ -52,12 +58,12 @@ const TranslationStore = {
       commit(TranslationMutation.SET_INPUT_WORD, word);
 
       const [yandexResult, urbanResults] = await Promise.all([
-        TranslationService.translateYandex(word),
+        TranslationService.translateRegular(word),
         TranslationService.translateUrban(word)
       ]);
 
-      commit(TranslationMutation.SET_REGULAR_RESULT, yandexResult)
-      commit(TranslationMutation.SET_URBAN_RESULTS, urbanResults)
+      commit(TranslationMutation.SET_REGULAR_RESULT, yandexResult);
+      commit(TranslationMutation.SET_URBAN_RESULTS, urbanResults);
     }
   }
 };

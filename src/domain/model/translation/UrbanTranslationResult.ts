@@ -3,6 +3,6 @@ export default class UrbanTranslationResult {
     public readonly word: string = "",
     public readonly definition: string = "",
     public readonly example: string = "",
-    public readonly defid: number = 0
+    public readonly defId: number = 0
   ) {}
 }

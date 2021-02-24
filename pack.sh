@@ -2,11 +2,11 @@ MODE=$1
 PATH_TO_SERVER=$2
 
 if [ "$MODE" == "" ]; then
-  MODE="dev"
+  MODE="prod"
 fi
 
 if [ "$PATH_TO_SERVER" == "" ]; then
-  PATH_TO_SERVER="../TODO"
+  PATH_TO_SERVER="../translation-aggregator-server"
 fi
 
 if [ ! -d $"$PATH_TO_SERVER" ]; then
@@ -14,7 +14,9 @@ if [ ! -d $"$PATH_TO_SERVER" ]; then
   exit
 fi
 
-PATH_TO_SERVER_STATIC="$PATH_TO_SERVER/static"
+rm -rf ./dist/*
+
+PATH_TO_SERVER_STATIC="$PATH_TO_SERVER/src/main/resources/static"
 mkdir -p $PATH_TO_SERVER_STATIC
 if [ $MODE == "dev" ]; then
   npm run build:dev

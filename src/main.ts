@@ -3,7 +3,6 @@ import App from "./App.vue";
 
 import VueAxios from "vue-axios";
 
-import "./registerServiceWorker";
 import router from "./view/router/routes";
 import store from "./domain/store/Store";
 import { axiosInstance } from "@/axios";

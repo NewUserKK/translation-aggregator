@@ -3,8 +3,8 @@ import router from "@/view/router/routes";
 
 export const BASE_URL =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:8081"
-    : "https://your-prod-server.net";
+    ? "http://localhost:8080/api"
+    : "http://localhost:8080/api";
 
 export const axiosInstance = axios.create({
   baseURL: BASE_URL

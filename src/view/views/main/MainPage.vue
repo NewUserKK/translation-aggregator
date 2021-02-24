@@ -22,7 +22,11 @@
         </div>
 
         <div class="main-translations__wrapper">
-          <p>{{ regularTranslationResult }}</p>
+          <div class="main-translations-result__wrapper">
+            <p class="main-translations-result__text">
+              {{ regularTranslationResult.text }}
+            </p>
+          </div>
         </div>
       </section>
 
@@ -34,7 +38,7 @@
           <li
             class="urban-translations__list-item"
             v-for="urbanResult of urbanTranslationResults"
-            :key="urbanResult.defid"
+            :key="urbanResult.defId"
           >
             <Card>
               <p class="urban-translations__list-item__word">
@@ -52,10 +56,6 @@
         </ul>
       </section>
     </main>
-
-    <footer class="footer">
-      <p>&copy; Konstantin Kostin, 2021</p>
-    </footer>
   </div>
 </template>
 
@@ -70,6 +70,7 @@
     TranslationMutation,
     TranslationState
   } from "@/domain/store/translation/TranslationStore";
+  import RegularTranslationResult from "@/domain/model/translation/RegularTranslationResult";
 
   @Component({
     components: { HeaderProfileBadge, Card }
@@ -85,12 +86,21 @@
       this.$store.commit(TranslationMutation.SET_INPUT_WORD, value);
     }
 
-    get regularTranslationResult(): string {
-      return this.translationState.regularTranslationResult
-        .matcher<string>()
+    get regularTranslationResult(): RegularTranslationResult {
+      console.log(this.translationState);
+      const results = this.translationState.regularTranslationResults
+        .matcher<RegularTranslationResult[]>()
         .selfOnRight()
-        .onLeft(() => "")
+        .onLeft(e => [new RegularTranslationResult(e.message)])
         .match();
+
+      console.log(results);
+
+      if (results.length == 0) {
+        return new RegularTranslationResult("");
+      }
+
+      return results[0];
     }
 
     get urbanTranslationResults(): UrbanTranslationResult[] {
@@ -183,11 +193,27 @@
     height: 100%;
 
     padding: 20px;
+
     border: 0px;
+    border-radius: 40px;
+
     font-size: 32px;
 
+    resize: none;
+  }
+
+  .main-translations-result__wrapper {
+    width: 100%;
+    height: 100%;
+
+    padding: 20px;
+    border: 0px;
     border-radius: 40px;
     resize: none;
+  }
+
+  .main-translations-result__text {
+    font-size: 32px;
   }
 
   .urban-translations {

@@ -11,8 +11,7 @@ import NotFoundPage from "@/view/views/NotFoundPage.vue";
 
 Vue.use(VueRouter);
 
-let routes: Array<RouteConfig>;
-routes = [
+const routes: Array<RouteConfig> = [
   {
     path: "/",
     redirect: "/main"
@@ -53,6 +52,6 @@ if (process.env.NODE_ENV === "development") {
 
 routes.push({ path: "*", component: NotFoundPage });
 
-const router = new VueRouter({ routes });
+const router = new VueRouter({ mode: "hash", routes });
 
 export default router;

@@ -7,22 +7,22 @@
 // https://docs.cypress.io/api/plugins/preprocessors-api.html#Examples
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const browserify = require("@cypress/browserify-preprocessor");
-// const webpack = require("@cypress/webpack-preprocessor");
+const webpack = require("@cypress/webpack-preprocessor");
+// const browserify = require("@cypress/browserify-preprocessor");
 
 module.exports = (on, config) => {
-  const browserifyOptions = browserify.defaultOptions;
-  browserifyOptions.browserifyOptions.transform[1][1].babelrc = true;
-  browserifyOptions.typescript = require.resolve("typescript");
-  on("file:preprocessor", browserify(browserifyOptions));
+  // const browserifyOptions = browserify.defaultOptions;
+  // browserifyOptions.browserifyOptions.transform[1][1].babelrc = true;
+  // browserifyOptions.typescript = require.resolve("typescript");
+  // on("file:preprocessor", browserify(browserifyOptions));
 
-  // on(
-  //   "file:preprocessor",
-  //   webpack({
-  //     webpackOptions: require("../../../webpack.config.js"),
-  //     watchOptions: {}
-  //   })
-  // );
+  on(
+    "file:preprocessor",
+    webpack({
+      webpackOptions: require("../../../webpack.config.js"),
+      watchOptions: {}
+    })
+  );
 
   return Object.assign({}, config, {
     fixturesFolder: "tests/e2e/fixtures",
