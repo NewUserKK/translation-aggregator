@@ -1,0 +1,64 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:5.2.0"
+    }
+}
+
+
+plugins {
+    id 'application'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+}
+
+apply plugin: "com.github.johnrengelman.shadow"
+
+group "ru.newuserkk"
+version "0.0.1"
+mainClassName = "ru.newuserkk.application.ApplicationKt"
+
+repositories {
+    mavenLocal()
+    jcenter()
+    maven { url "https://kotlin.bintray.com/ktor" }
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    archiveBaseName.set("translation-aggregator")
+    archiveClassifier.set(null)
+    archiveVersion.set(null)
+}
+
+dependencies {
+    implementation "io.ktor:ktor-server-core:$ktor_version"
+    implementation "io.ktor:ktor-auth:$ktor_version"
+    implementation "io.ktor:ktor-server-sessions:$ktor_version"
+    implementation "io.ktor:ktor-client-core:$ktor_version"
+    implementation "io.ktor:ktor-client-apache:$ktor_version"
+    implementation "io.ktor:ktor-client-json:$ktor_version"
+    implementation "io.ktor:ktor-client-jackson:$ktor_version"
+    implementation "io.ktor:ktor-jackson:$ktor_version"
+    implementation "io.ktor:ktor-server-host-common:$ktor_version"
+    implementation "io.ktor:ktor-server-netty:$ktor_version"
+    implementation "ch.qos.logback:logback-classic:$logback_version"
+    implementation 'org.kodein.di:kodein-di-framework-ktor-server-jvm:7.3.0'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    runtime 'io.jsonwebtoken:jjwt-impl:0.11.2',
+            'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.59'
+
+    testImplementation "io.ktor:ktor-server-tests:$ktor_version"
+}
