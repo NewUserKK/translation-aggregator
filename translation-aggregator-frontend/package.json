@@ -15,6 +15,7 @@
     "axios": "^0.21.1",
     "babel-plugin-module-resolver": "^4.1.0",
     "core-js": "^3.6.5",
+    "cypress": "^6.5.0",
     "flush-promises": "^1.0.2",
     "path": "^0.12.7",
     "ts-debounce": "^2.1.0",

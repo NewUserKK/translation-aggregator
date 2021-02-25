@@ -16,6 +16,7 @@ import org.kodein.di.instance
 import org.kodein.di.ktor.di
 import org.slf4j.event.Level
 import ru.newuserkk.common.Right
+import ru.newuserkk.common.requireEnv
 import ru.newuserkk.controller.auth.Session
 import ru.newuserkk.controller.translation.TranslationControllerImpl
 import ru.newuserkk.controller.translation.TranslationControllerTest
@@ -32,7 +33,7 @@ fun main(args: Array<String>): Unit =
  * */
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
-fun Application.module(testing: Boolean = false) {
+fun Application.module(testing: Boolean = Config.isTestMode) {
     setupDi(testing)
 
     install(CallLogging) {

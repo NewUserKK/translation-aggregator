@@ -37,3 +37,27 @@ services:
         ports:
             - 8080:8080
         restart: always
+    test-server:
+        build: .
+        container_name: translation-aggregator-server-test
+        environment:
+            PORT: 8082
+            TEST_MODE: "true"
+        env_file:
+            - .env
+        depends_on:
+            - postgres
+        volumes:
+            -   type: bind
+                source: ./src/main/resources/static
+                target: /app/src/main/resources/static
+                read_only: true
+            -   type: bind
+                source: ./keys
+                target: /app/keys
+                read_only: true
+        expose:
+            - 8082
+        ports:
+            - 8082:8082
+        restart: always

@@ -12,6 +12,7 @@
     <section v-else class="header-profile-signed">
       <p class="header-profile-signed__username">{{ loggedUser.name }}</p>
       <button
+        id="header-profile__history-button"
         class="header-profile__button"
         type="button"
         @click="navigateToHistory"

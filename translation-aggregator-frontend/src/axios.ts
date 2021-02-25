@@ -2,7 +2,9 @@ import axios from "axios";
 import router from "@/view/router/routes";
 
 export const BASE_URL =
-  process.env.NODE_ENV === "development"
+  Cypress.env("TEST_MODE") === "true"
+    ? "http://localhost:8082/api"
+    : process.env.NODE_ENV === "development"
     ? "http://localhost:8080/api"
     : "http://localhost:8080/api";
 

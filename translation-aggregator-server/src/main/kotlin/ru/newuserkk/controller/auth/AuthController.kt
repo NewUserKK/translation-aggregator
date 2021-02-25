@@ -8,6 +8,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
 import io.ktor.util.pipeline.*
+import ru.newuserkk.application.Config
 import ru.newuserkk.common.Left
 import ru.newuserkk.common.Right
 import ru.newuserkk.controller.BaseController
@@ -62,6 +63,13 @@ class AuthController(private val authRepository: AuthRepository) : BaseControlle
         post("logout") {
             authorized {
                 call.sessions.clear<Session>()
+                call.respond(HttpStatusCode.OK)
+            }
+        }
+
+        if (Config.isTestMode) {
+            post("clearUsers") {
+                authRepository.clearUsers()
                 call.respond(HttpStatusCode.OK)
             }
         }

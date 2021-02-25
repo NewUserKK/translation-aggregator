@@ -6,6 +6,7 @@
         <section class="login-form-input-wrapper">
           <label>
             <input
+              id="login-form__username-input"
               class="login-form__input"
               v-model="username"
               type="text"
@@ -16,6 +17,7 @@
         <section class="login-form-input-wrapper">
           <label>
             <input
+              id="login-form__password-input"
               class="login-form__input"
               v-model="password"
               type="password"
@@ -24,20 +26,30 @@
           </label>
         </section>
         <section class="login-form-buttons">
-          <button class="login-form__button" type="button" @click="register">
+          <button
+            id="login-form__register-button"
+            class="login-form__button"
+            type="button"
+            @click="register"
+          >
             Register
           </button>
-          <button class="login-form__button" type="button" @click="login">
+          <button
+            id="login-form__login-button"
+            class="login-form__button"
+            type="button"
+            @click="login"
+          >
             Sign In
           </button>
         </section>
       </form>
 
-      <p v-if="!!loginError">
+      <p id="login-form__error-message" v-if="!!loginError">
         {{ loginError }}
       </p>
 
-      <p v-if="showRegisterSuccess">
+      <p id="login-form__registration-message" v-if="showRegisterSuccess">
         Registered successfully!
       </p>
     </div>

@@ -20,7 +20,7 @@
       HistoryService.getHistory()
         .then(result => {
           this.history = result
-            .matcher()
+            .matcher<string[]>()
             .selfOnRight()
             .throwOnLeft()
             .match();

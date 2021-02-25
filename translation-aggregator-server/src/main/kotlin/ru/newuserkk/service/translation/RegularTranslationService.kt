@@ -117,8 +117,5 @@ class RegularTranslationService(private val httpClient: HttpClient) : Translatio
 
         private val YANDEX_CLOUD_FOLDER_ID = requireEnv("YANDEX_CLOUD_FOLDER_ID")
         private const val TRANSLATION_URL = "https://translate.api.cloud.yandex.net/translate/v2/translate"
-
-        private fun requireEnv(name: String): String =
-            System.getenv(name) ?: error("Env variable $name not specified!")
     }
 }

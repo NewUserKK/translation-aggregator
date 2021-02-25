@@ -29,4 +29,9 @@ class AuthRepository {
         credentials[username] != password -> leftOf(AuthError("Invalid password"))
         else -> User(username, id = lastId++).asRight()
     }
+
+    fun clearUsers() {
+        lastId = 0
+        credentials.clear()
+    }
 }
