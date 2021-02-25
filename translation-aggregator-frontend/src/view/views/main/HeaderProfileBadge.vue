@@ -11,6 +11,13 @@
     </section>
     <section v-else>
       <p>{{ loggedUser.name }}</p>
+      <button
+        class="header-profile__sign-in-button"
+        type="button"
+        @click="signOut"
+      >
+        Sign out
+      </button>
     </section>
   </div>
 </template>
@@ -30,6 +37,10 @@
 
     navigateToLogin() {
       this.$emit("signInPress");
+    }
+
+    signOut() {
+      this.$emit("signOutPress");
     }
   }
 </script>

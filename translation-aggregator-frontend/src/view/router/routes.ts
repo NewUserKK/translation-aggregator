@@ -24,9 +24,9 @@ const routes: Array<RouteConfig> = [
       /*  important! here we use default axios instance without interceptor
           to avoid infinite recursive logins
       */
-      axios.get(`${BASE_URL}/ping`).then(
+      axios.get(`${BASE_URL}/auth/ping`).then(
         () => {
-          next({ path: "/authenticated" });
+          next({ path: "/" });
         },
         () => {
           next();

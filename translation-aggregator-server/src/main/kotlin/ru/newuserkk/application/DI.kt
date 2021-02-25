@@ -8,14 +8,13 @@ import io.ktor.application.*
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.client.features.json.*
-import org.kodein.di.bind
-import org.kodein.di.instance
+import org.kodein.di.*
 import org.kodein.di.ktor.di
-import org.kodein.di.provider
-import org.kodein.di.singleton
+import ru.newuserkk.controller.auth.AuthController
 import ru.newuserkk.controller.translation.TranslationController
 import ru.newuserkk.controller.translation.TranslationControllerImpl
 import ru.newuserkk.controller.translation.TranslationControllerTest
+import ru.newuserkk.db.auth.AuthRepository
 import ru.newuserkk.service.translation.RegularTranslationService
 import ru.newuserkk.service.translation.UrbanTranslationService
 
@@ -35,14 +34,26 @@ val httpClient = HttpClient(Apache) {
 }
 
 fun Application.setupDi(testing: Boolean) = di {
+    bind<Router>() with singleton { Router(instance(), instance()) }
     bind<HttpClient>() with provider { httpClient }
-    bind<UrbanTranslationService>() with singleton { UrbanTranslationService(instance()) }
-    bind<RegularTranslationService>() with singleton { RegularTranslationService(instance()) }
+
+    import(authModule())
+    import(translationModule(testing))
+}
+
+private fun authModule() = DI.Module(name = "authModule") {
+    bind<AuthController>() with singleton { AuthController(instance()) }
+    bind<AuthRepository>() with singleton { AuthRepository() }
+}
+
+private fun translationModule(testing: Boolean) = DI.Module(name = "translationModule") {
     bind<TranslationController>() with singleton {
         when {
             !testing -> TranslationControllerImpl(instance(), instance())
             else -> TranslationControllerTest
         }
     }
-    bind<Router>() with singleton { Router(instance()) }
+
+    bind<UrbanTranslationService>() with singleton { UrbanTranslationService(instance()) }
+    bind<RegularTranslationService>() with singleton { RegularTranslationService(instance()) }
 }

@@ -1,12 +1,12 @@
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import Result from "@/domain/common/Result";
 import { leftOf, rightOf } from "@/domain/common/Either";
 
 export async function handle<ResultType, ResponseType = object | any[]>(
   call: Promise<AxiosResponse<ResponseType>>,
   onSuccess: (result: ResponseType) => Result<ResultType>,
-  onFailure: (error: Error) => Result<ResultType> = error => {
-    return leftOf(error);
+  onFailure: (error: AxiosError) => Result<ResultType> = error => {
+    return leftOf(error.response ? error.response.data : error);
   }
 ): Promise<Result<ResultType>> {
   try {
@@ -17,11 +17,12 @@ export async function handle<ResultType, ResponseType = object | any[]>(
   }
 }
 
+// prettier-ignore
 export async function handleAsync<ResultType, ResponseType = object | any[]>(
   call: Promise<AxiosResponse<ResponseType>>,
   onSuccess: (result: ResponseType) => Promise<Result<ResultType>>,
-  onFailure: (error: Error) => Promise<Result<ResultType>> = async error => {
-    return leftOf(error);
+  onFailure: (error: AxiosError) => Promise<Result<ResultType>> = async error => {
+    return leftOf(error.response ? error.response.data : error);
   }
 ): Promise<Result<ResultType>> {
   try {

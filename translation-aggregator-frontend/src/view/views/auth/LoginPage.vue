@@ -1,23 +1,34 @@
 <template>
   <div class="login-container">
-    <div class="login-form-wrapper" @submit.prevent="login">
+    <div class="login-form-wrapper">
       <h1 class="login-header">Authenticate</h1>
       <form class="login-form">
         <section class="login-form-input">
           <label>
-            <input type="text" placeholder="Login" />
+            <input v-model="username" type="text" placeholder="Login" />
           </label>
         </section>
         <section class="login-form-input">
           <label>
-            <input type="password" placeholder="Password" />
+            <input v-model="password" type="password" placeholder="Password" />
           </label>
         </section>
-        <button type="submit">Sign In</button>
+        <section class="login-form-buttons">
+          <button class="login-form__button" type="button" @click="register">
+            Register
+          </button>
+          <button class="login-form__button" type="button" @click="login">
+            Sign In
+          </button>
+        </section>
       </form>
 
       <p v-if="!!loginError">
         {{ loginError }}
+      </p>
+
+      <p v-if="showRegisterSuccess">
+        Registered successfully!
       </p>
     </div>
   </div>
@@ -25,13 +36,45 @@
 
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
+  import { UserAction } from "@/domain/store/user/UserStore";
 
   @Component
   export default class AuthScreen extends Vue {
-    loginError: Error | null = null;
+    username = "";
+    password = "";
 
-    login() {
-      this.$router.replace("main");
+    loginError: Error | null = null;
+    showRegisterSuccess = false;
+
+    async register() {
+      try {
+        await this.$store.dispatch(UserAction.REGISTER_USER, {
+          username: this.username,
+          password: this.password
+        });
+        this.loginError = null;
+        this.username = "";
+        this.password = "";
+        this.showRegisterSuccess = true;
+        setTimeout(() => {
+          this.showRegisterSuccess = false;
+        }, 5000);
+      } catch (e) {
+        this.loginError = e;
+      }
+    }
+
+    async login() {
+      try {
+        await this.$store.dispatch(UserAction.AUTHENTICATE, {
+          username: this.username,
+          password: this.password
+        });
+        this.loginError = null;
+        await this.$router.replace("main");
+      } catch (e) {
+        this.loginError = e;
+      }
     }
   }
 </script>
@@ -70,15 +113,31 @@
     margin: 4px 0px;
   }
 
-  button {
-    color: white;
-    font-weight: bold;
+  .login-form-buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .login-form__button {
+    flex-grow: 1;
+    box-sizing: border-box;
+
+    margin-right: 8px;
+    margin-top: 8px;
+    padding: 10px 80px;
+
     background: #1989fa;
+
     border: none;
     border-radius: 10px;
-    padding: 10px 80px;
-    width: 100%;
-    box-sizing: border-box;
-    margin-top: 8px;
+
+    font-weight: bold;
+    color: white;
+  }
+
+  .login-form__button:last-child {
+    margin-right: 0px;
   }
 </style>

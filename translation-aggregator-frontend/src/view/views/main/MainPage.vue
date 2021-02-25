@@ -5,6 +5,7 @@
       <HeaderProfileBadge
         class="header__badge"
         @signInPress="$router.push({ path: '/login' })"
+        @signOutPress="onSignOut"
       />
     </header>
 
@@ -71,6 +72,7 @@
     TranslationState
   } from "@/domain/store/translation/TranslationStore";
   import RegularTranslationResult from "@/domain/model/translation/RegularTranslationResult";
+  import { UserAction, UserMutation } from "@/domain/store/user/UserStore";
 
   @Component({
     components: { HeaderProfileBadge, Card }
@@ -87,14 +89,11 @@
     }
 
     get regularTranslationResult(): RegularTranslationResult {
-      console.log(this.translationState);
       const results = this.translationState.regularTranslationResults
         .matcher<RegularTranslationResult[]>()
         .selfOnRight()
         .onLeft(e => [new RegularTranslationResult(e.message)])
         .match();
-
-      console.log(results);
 
       if (results.length == 0) {
         return new RegularTranslationResult("");
@@ -115,6 +114,10 @@
     async translateText(event: InputEvent) {
       const query: string = (event.target as any).value;
       await this.$store.dispatch(TranslationAction.TRANSLATE_WORD, query);
+    }
+
+    onSignOut() {
+      this.$store.dispatch(UserAction.LOGOUT);
     }
   }
 </script>
