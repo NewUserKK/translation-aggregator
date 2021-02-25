@@ -8,6 +8,7 @@ import AuthenticatedPage from "@/view/views/auth/AuthenticatedPage.vue";
 import ComponentsTestPage from "@/view/views/dev/ComponentsTestPage.vue";
 import MainPage from "@/view/views/main/MainPage.vue";
 import NotFoundPage from "@/view/views/NotFoundPage.vue";
+import HistoryPage from "@/view/views/history/HistoryPage.vue";
 
 Vue.use(VueRouter);
 
@@ -43,6 +44,11 @@ const routes: Array<RouteConfig> = [
   {
     path: "/main",
     component: MainPage
+  },
+
+  {
+    path: "/history",
+    component: HistoryPage
   }
 ];
 

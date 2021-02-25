@@ -16,14 +16,16 @@ class UrbanTranslationService(private val httpClient: HttpClient) : TranslationS
                 parameter("term", word)
             }.list.map { result ->
                 result.copy(
-                    definition = removeLinks(result.definition),
-                    example = removeLinks(result.example)
+                    definition = normalizeText(result.definition),
+                    example = normalizeText(result.example)
                 )
             }
         }
     }
 
-    private fun removeLinks(text: String): String = text.replace("[\\[\\]]".toRegex(), "")
+    private fun normalizeText(text: String): String =
+        text.replace("[\\[\\]]".toRegex(), "")
+            .replace("\r\n", "\n")
 
     companion object {
         private const val BASE_URL = "https://api.urbandictionary.com/v0/define"

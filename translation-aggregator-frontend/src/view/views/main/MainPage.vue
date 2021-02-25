@@ -72,7 +72,7 @@
     TranslationState
   } from "@/domain/store/translation/TranslationStore";
   import RegularTranslationResult from "@/domain/model/translation/RegularTranslationResult";
-  import { UserAction, UserMutation } from "@/domain/store/user/UserStore";
+  import { UserAction } from "@/domain/store/user/UserStore";
 
   @Component({
     components: { HeaderProfileBadge, Card }

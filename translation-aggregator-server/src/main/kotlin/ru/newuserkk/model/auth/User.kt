@@ -1,3 +1,5 @@
 package ru.newuserkk.model.auth
 
-data class User(val name: String, val id: Long = 0)
+typealias UserId = Long
+
+data class User(val name: String, val id: UserId = 0)

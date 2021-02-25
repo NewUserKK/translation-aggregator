@@ -3,14 +3,24 @@
     <div class="login-form-wrapper">
       <h1 class="login-header">Authenticate</h1>
       <form class="login-form">
-        <section class="login-form-input">
+        <section class="login-form-input-wrapper">
           <label>
-            <input v-model="username" type="text" placeholder="Login" />
+            <input
+              class="login-form__input"
+              v-model="username"
+              type="text"
+              placeholder="Login"
+            />
           </label>
         </section>
-        <section class="login-form-input">
+        <section class="login-form-input-wrapper">
           <label>
-            <input v-model="password" type="password" placeholder="Password" />
+            <input
+              class="login-form__input"
+              v-model="password"
+              type="password"
+              placeholder="Password"
+            />
           </label>
         </section>
         <section class="login-form-buttons">
@@ -93,6 +103,8 @@
     display: flex;
     flex-direction: column;
 
+    align-items: center;
+
     margin: auto;
   }
 
@@ -103,14 +115,20 @@
   }
 
   .login-form {
+    width: 300px;
+
     padding: 16px;
 
     border: 1px solid #dddddd;
     border-radius: 20px;
   }
 
-  .login-form-input {
+  .login-form-input-wrapper {
     margin: 4px 0px;
+  }
+
+  .login-form__input {
+    width: 100%;
   }
 
   .login-form-buttons {
@@ -126,7 +144,7 @@
 
     margin-right: 8px;
     margin-top: 8px;
-    padding: 10px 80px;
+    padding: 10px 0px;
 
     background: #1989fa;
 

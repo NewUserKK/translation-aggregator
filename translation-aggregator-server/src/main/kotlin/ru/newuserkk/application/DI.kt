@@ -11,10 +11,12 @@ import io.ktor.client.features.json.*
 import org.kodein.di.*
 import org.kodein.di.ktor.di
 import ru.newuserkk.controller.auth.AuthController
+import ru.newuserkk.controller.history.HistoryController
 import ru.newuserkk.controller.translation.TranslationController
 import ru.newuserkk.controller.translation.TranslationControllerImpl
 import ru.newuserkk.controller.translation.TranslationControllerTest
 import ru.newuserkk.db.auth.AuthRepository
+import ru.newuserkk.db.history.HistoryRepository
 import ru.newuserkk.service.translation.RegularTranslationService
 import ru.newuserkk.service.translation.UrbanTranslationService
 
@@ -34,11 +36,12 @@ val httpClient = HttpClient(Apache) {
 }
 
 fun Application.setupDi(testing: Boolean) = di {
-    bind<Router>() with singleton { Router(instance(), instance()) }
+    bind<Router>() with singleton { Router(instance(), instance(), instance()) }
     bind<HttpClient>() with provider { httpClient }
 
     import(authModule())
     import(translationModule(testing))
+    import(historyModule())
 }
 
 private fun authModule() = DI.Module(name = "authModule") {
@@ -49,11 +52,16 @@ private fun authModule() = DI.Module(name = "authModule") {
 private fun translationModule(testing: Boolean) = DI.Module(name = "translationModule") {
     bind<TranslationController>() with singleton {
         when {
-            !testing -> TranslationControllerImpl(instance(), instance())
+            !testing -> TranslationControllerImpl(instance(), instance(), instance())
             else -> TranslationControllerTest
         }
     }
 
     bind<UrbanTranslationService>() with singleton { UrbanTranslationService(instance()) }
     bind<RegularTranslationService>() with singleton { RegularTranslationService(instance()) }
+}
+
+private fun historyModule() = DI.Module("historyModule") {
+    bind<HistoryController>() with singleton { HistoryController(instance()) }
+    bind<HistoryRepository>() with singleton { HistoryRepository() }
 }

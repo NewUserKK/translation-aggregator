@@ -12,8 +12,9 @@ import ru.newuserkk.common.Left
 import ru.newuserkk.common.Right
 import ru.newuserkk.controller.BaseController
 import ru.newuserkk.db.auth.AuthRepository
+import ru.newuserkk.model.auth.UserId
 
-data class Session(val username: String, val id: Long = 0)
+data class Session(val username: String, val id: UserId = 0)
 
 private data class Credentials(val username: String, val password: String)
 
