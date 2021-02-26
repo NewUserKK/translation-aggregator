@@ -1,28 +1,21 @@
 package ru.newuserkk.application
 
+import ch.qos.logback.core.util.OptionHelper.getEnv
 import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.client.features.json.*
 import io.ktor.features.*
 import io.ktor.http.*
-import io.ktor.http.content.*
 import io.ktor.jackson.*
 import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
 import io.ktor.sessions.*
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.kodein.di.instance
 import org.kodein.di.ktor.di
 import org.slf4j.event.Level
-import ru.newuserkk.common.Right
-import ru.newuserkk.common.requireEnv
 import ru.newuserkk.controller.auth.Session
-import ru.newuserkk.controller.translation.TranslationControllerImpl
-import ru.newuserkk.controller.translation.TranslationControllerTest
-import ru.newuserkk.db.auth.AuthRepository
-import ru.newuserkk.service.translation.TranslationService
-import java.io.File
+import ru.newuserkk.data.auth.CredentialsTable
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
@@ -33,8 +26,12 @@ fun main(args: Array<String>): Unit =
  * */
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
-fun Application.module(testing: Boolean = Config.isTestMode) {
-    setupDi(testing)
+fun Application.module(launchMode: LaunchMode = Config.launchMode) {
+    setupDi(launchMode)
+
+    if (launchMode != LaunchMode.UNIT_TEST) {
+        setupDatabase()
+    }
 
     install(CallLogging) {
         level = Level.INFO
@@ -70,4 +67,23 @@ fun Application.module(testing: Boolean = Config.isTestMode) {
 
     val router by di().instance<Router>()
     router.provideRouting(this)
+}
+
+fun Application.setupDatabase() {
+    val host = getEnv("POSTGRES_HOST")
+    val db = getEnv("POSTGRES_DB")
+    val user = getEnv("POSTGRES_USER")
+    val password = getEnv("POSTGRES_PASSWORD")
+    val port = getEnv("POSTGRES_PORT")
+
+    Database.connect(
+        url = "jdbc:postgresql://$host:$port/$db",
+        driver = "org.postgresql.Driver",
+        user = user,
+        password = password
+    )
+
+    transaction {
+        SchemaUtils.create(CredentialsTable)
+    }
 }

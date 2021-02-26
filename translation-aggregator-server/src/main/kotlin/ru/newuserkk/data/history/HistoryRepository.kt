@@ -1,4 +1,4 @@
-package ru.newuserkk.db.history
+package ru.newuserkk.data.history
 
 import ru.newuserkk.model.auth.UserId
 

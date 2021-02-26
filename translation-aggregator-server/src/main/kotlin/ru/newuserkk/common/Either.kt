@@ -15,6 +15,8 @@ fun <A> A.asLeft(): Left<A> = leftOf(this)
 fun <B> B.asRight(): Right<B> = rightOf(this)
 fun <B> B.asEither() = asRight()
 
+fun Any?.ignoreReturnValue(): Unit = Unit
+
 fun <T> runSafely(block: () -> T): OperationResult<T> = try {
     block().asRight()
 } catch (e: Exception) {

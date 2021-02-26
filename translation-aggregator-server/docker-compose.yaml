@@ -5,17 +5,16 @@ services:
         build: ./db
         container_name: postgres
         healthcheck:
-            test: [ "CMD-SHELL", "pg_isready -U root --db-name db" ]
+            test: [ "CMD-SHELL", "pg_isready -U postgres --db-name postgres" ]
             interval: 10s
             timeout: 5s
             retries: 5
         env_file:
             - .env
-        expose:
-            - 5431
         ports:
-            - 5431:5431
+            - 5431:5432
         restart: always
+
     server:
         build: .
         container_name: translation-aggregator-server
@@ -37,16 +36,32 @@ services:
         ports:
             - 8080:8080
         restart: always
-    test-server:
+
+    postgres-test:
+        build: ./db
+        container_name: postgres-test
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U postgres --db-name postgres" ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        env_file:
+            - .env
+        ports:
+            - 5430:5432
+        restart: always
+
+    server-test:
         build: .
         container_name: translation-aggregator-server-test
         environment:
             PORT: 8082
             TEST_MODE: "true"
+            POSTGRES_HOST: "postgres-test"
         env_file:
             - .env
         depends_on:
-            - postgres
+            - postgres-test
         volumes:
             -   type: bind
                 source: ./src/main/resources/static

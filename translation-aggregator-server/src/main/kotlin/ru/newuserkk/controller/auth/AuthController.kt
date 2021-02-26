@@ -9,17 +9,22 @@ import io.ktor.routing.*
 import io.ktor.sessions.*
 import io.ktor.util.pipeline.*
 import ru.newuserkk.application.Config
+import ru.newuserkk.application.LaunchMode
 import ru.newuserkk.common.Left
 import ru.newuserkk.common.Right
 import ru.newuserkk.controller.BaseController
-import ru.newuserkk.db.auth.AuthRepository
+import ru.newuserkk.data.auth.AuthFacade
+import ru.newuserkk.data.auth.AuthRepository
 import ru.newuserkk.model.auth.UserId
 
 data class Session(val username: String, val id: UserId = 0)
 
 private data class Credentials(val username: String, val password: String)
 
-class AuthController(private val authRepository: AuthRepository) : BaseController("auth") {
+class AuthController(
+    private val authFacade: AuthFacade,
+    private val authRepository: AuthRepository
+) : BaseController("auth") {
     override fun Route.doProvideRoutes() {
         get("ping") {
             authorized {
@@ -35,7 +40,7 @@ class AuthController(private val authRepository: AuthRepository) : BaseControlle
                 return@post
             }
 
-            when (val registrationResult = authRepository.register(body.username, body.password)) {
+            when (val registrationResult = authFacade.registerUser(body.username, body.password)) {
                 is Right -> call.respond(HttpStatusCode.OK)
                 is Left -> call.respond(HttpStatusCode.BadRequest, registrationResult.value.message.toString())
             }
@@ -50,12 +55,15 @@ class AuthController(private val authRepository: AuthRepository) : BaseControlle
             }
 
             with(body) {
-                when (val authenticationResult = authRepository.authenticate(username, password)) {
+                when (val authenticationResult = authFacade.authorizeUser(username, password)) {
                     is Right -> with(authenticationResult.value) {
                         call.sessions.set(Session(username, id))
                         call.respond(HttpStatusCode.OK, authenticationResult.value)
                     }
-                    is Left -> call.respond(HttpStatusCode.BadRequest, authenticationResult.value.message.toString())
+                    is Left -> call.respond(
+                        HttpStatusCode.BadRequest,
+                        authenticationResult.value.message.toString()
+                    )
                 }
             }
         }
@@ -67,7 +75,7 @@ class AuthController(private val authRepository: AuthRepository) : BaseControlle
             }
         }
 
-        if (Config.isTestMode) {
+        if (Config.launchMode == LaunchMode.E2E_TEST) {
             post("clearUsers") {
                 authRepository.clearUsers()
                 call.respond(HttpStatusCode.OK)
@@ -77,7 +85,7 @@ class AuthController(private val authRepository: AuthRepository) : BaseControlle
 }
 
 suspend inline fun PipelineContext<Unit, ApplicationCall>.authorized(block: (Session) -> Unit) {
-    when(val session = call.sessions.get<Session>()) {
+    when (val session = call.sessions.get<Session>()) {
         null -> call.respond(HttpStatusCode.Unauthorized)
         else -> block(session)
     }

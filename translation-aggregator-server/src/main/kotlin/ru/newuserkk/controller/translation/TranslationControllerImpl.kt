@@ -10,7 +10,7 @@ import io.ktor.util.pipeline.*
 import ru.newuserkk.common.Left
 import ru.newuserkk.common.Right
 import ru.newuserkk.controller.auth.Session
-import ru.newuserkk.db.history.HistoryRepository
+import ru.newuserkk.data.history.HistoryRepository
 import ru.newuserkk.service.translation.RegularTranslationService
 import ru.newuserkk.service.translation.TranslationService
 import ru.newuserkk.service.translation.UrbanTranslationService

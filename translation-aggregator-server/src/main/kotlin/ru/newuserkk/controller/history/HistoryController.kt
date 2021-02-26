@@ -6,7 +6,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import ru.newuserkk.controller.BaseController
 import ru.newuserkk.controller.auth.authorized
-import ru.newuserkk.db.history.HistoryRepository
+import ru.newuserkk.data.history.HistoryRepository
 
 class HistoryController(private val historyRepository: HistoryRepository) : BaseController("history") {
     override fun Route.doProvideRoutes() {

@@ -33,12 +33,22 @@ compileKotlin {
     }
 }
 
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
     archiveBaseName.set("translation-aggregator")
     archiveClassifier.set(null)
     archiveVersion.set(null)
+}
+
+test {
+    useJUnitPlatform()
 }
 
 dependencies {
@@ -59,11 +69,17 @@ dependencies {
     implementation "org.jetbrains.exposed:exposed-core:$exposed_version"
     implementation "org.jetbrains.exposed:exposed-dao:$exposed_version"
     implementation "org.jetbrains.exposed:exposed-jdbc:$exposed_version"
+    implementation "org.postgresql:postgresql:42.2.2"
 
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-    runtime 'io.jsonwebtoken:jjwt-impl:0.11.2',
-            'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    runtime 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    runtime 'io.jsonwebtoken:jjwt-jackson:0.11.2'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.59'
 
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
+    testImplementation 'io.kotest:kotest-runner-junit5:4.4.1'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    testImplementation "org.mockito:mockito-core:3.8.0"
+    testImplementation "org.testcontainers:testcontainers:1.15.2"
+    testImplementation "org.testcontainers:postgresql:1.15.2"
 }

@@ -15,8 +15,10 @@ import ru.newuserkk.controller.history.HistoryController
 import ru.newuserkk.controller.translation.TranslationController
 import ru.newuserkk.controller.translation.TranslationControllerImpl
 import ru.newuserkk.controller.translation.TranslationControllerTest
-import ru.newuserkk.db.auth.AuthRepository
-import ru.newuserkk.db.history.HistoryRepository
+import ru.newuserkk.data.auth.AuthDao
+import ru.newuserkk.data.auth.AuthFacade
+import ru.newuserkk.data.auth.AuthRepository
+import ru.newuserkk.data.history.HistoryRepository
 import ru.newuserkk.service.translation.RegularTranslationService
 import ru.newuserkk.service.translation.UrbanTranslationService
 
@@ -35,24 +37,26 @@ val httpClient = HttpClient(Apache) {
     }
 }
 
-fun Application.setupDi(testing: Boolean) = di {
+fun Application.setupDi(launchMode: LaunchMode) = di {
     bind<Router>() with singleton { Router(instance(), instance(), instance()) }
     bind<HttpClient>() with provider { httpClient }
 
     import(authModule())
-    import(translationModule(testing))
+    import(translationModule(launchMode))
     import(historyModule())
 }
 
 private fun authModule() = DI.Module(name = "authModule") {
-    bind<AuthController>() with singleton { AuthController(instance()) }
-    bind<AuthRepository>() with singleton { AuthRepository() }
+    bind<AuthController>() with singleton { AuthController(instance(), instance()) }
+    bind<AuthFacade>() with singleton { AuthFacade(instance()) }
+    bind<AuthRepository>() with singleton { AuthRepository(instance()) }
+    bind<AuthDao>() with singleton { AuthDao() }
 }
 
-private fun translationModule(testing: Boolean) = DI.Module(name = "translationModule") {
+private fun translationModule(launchMode: LaunchMode) = DI.Module(name = "translationModule") {
     bind<TranslationController>() with singleton {
-        when {
-            !testing -> TranslationControllerImpl(instance(), instance(), instance())
+        when(launchMode) {
+            LaunchMode.PRODUCTION -> TranslationControllerImpl(instance(), instance(), instance())
             else -> TranslationControllerTest
         }
     }
