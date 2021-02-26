@@ -2,6 +2,7 @@
   <div class="header-profile__container">
     <section v-if="!loggedUser">
       <button
+        id="header-profile__sign-in-button"
         class="header-profile__button"
         type="button"
         @click="navigateToLogin"
@@ -10,7 +11,9 @@
       </button>
     </section>
     <section v-else class="header-profile-signed">
-      <p class="header-profile-signed__username">{{ loggedUser.name }}</p>
+      <p id="header-profile__username" class="header-profile__username">
+        {{ loggedUser.name }}
+      </p>
       <button
         id="header-profile__history-button"
         class="header-profile__button"
@@ -71,7 +74,7 @@
     align-items: center;
   }
 
-  .header-profile-signed__username {
+  .header-profile__username {
     font-size: 20px;
     font-weight: 600;
   }

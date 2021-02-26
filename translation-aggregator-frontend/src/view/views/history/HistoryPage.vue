@@ -2,7 +2,7 @@
   <div class="container">
     <button class="back-button" @click="$router.back()">Back</button>
     <h1>History</h1>
-    <ul>
+    <ul data-testid="history-list">
       <li v-for="query in history" :key="query">- {{ query }}</li>
     </ul>
   </div>
