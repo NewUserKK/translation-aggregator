@@ -34,7 +34,6 @@ jobs:
       working-directory: ${{ env.working-directory }}
     - run: npm run test:unit
       working-directory: ${{ env.working-directory }}
-    - run: npm run test:e2e:ci
-      working-directory: ${{ env.working-directory }}
+
 
 
