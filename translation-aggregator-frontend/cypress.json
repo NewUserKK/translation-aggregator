@@ -1,5 +1,5 @@
 {
-  "pluginsFile": "tests/e2e/plugins/index.js",
+  "pluginsFile": "tests/e2e/cypress/plugins/index.js",
   "env": {
     "TEST_MODE": "true"
   }
